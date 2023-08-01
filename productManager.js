@@ -65,7 +65,7 @@ class ProductManager {
   }
 }
 
-// Cargar productos desde el archivo "productos.txt" al crear una instancia de ProductManager
+// Cargar productos desde el archivo tx al crear una instancia de ProductManager
 const loadProductsFromFile = async () => {
   try {
     const productsData = await fs.readFile('./productos.txt', 'utf-8');
@@ -76,7 +76,7 @@ const loadProductsFromFile = async () => {
   }
 };
 
-// Crear una instancia de ProductManager y cargar los productos desde el archivo
+// Crear una instancia de ProductManager y cargar los productos desde el txt
 loadProductsFromFile().then(async (manager) => {
 
 
@@ -113,6 +113,8 @@ loadProductsFromFile().then(async (manager) => {
   await manager.updateProduct(1, { title: 'Producto 1', price:'20000' }); // Actualiza producto con ID 1
 
   //await manager.deleteProduct(1); // Eliminar producto con ID 1
+
   const updatedProducts = manager.getProducts(); // Obtener todos los productos actualizados
+
   console.log('Productos actualizados:', updatedProducts);
 });
