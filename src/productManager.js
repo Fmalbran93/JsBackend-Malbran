@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs';
 
-class ProductManager {
+export class ProductManager {
   constructor(products = []) {
     this.products = products;
     this.nextId = 1;
+    this.path = './src/productos.txt'; // Ruta del archivo de productos
   }
 
   async addProduct(product) {
@@ -26,14 +27,28 @@ class ProductManager {
   getProducts() {
     return this.products;
   }
-
   async getProductById(id) {
-    const products = JSON.parse(await fs.readFile('./productos.txt', 'utf-8'));
-    const product = products.find(producto => producto.id === id);
-    if (product) {
-      console.log(product);
-    } else {
-      console.log("Producto no encontrado");
+    try {
+      const productsData = await fs.readFile(this.path, 'utf-8');
+
+      if (productsData.trim() === "") {
+        console.log("El archivo de productos está vacío.");
+        return null;
+      }
+
+      const products = JSON.parse(productsData);
+      const product = products.find(producto => producto.id === id);
+
+      if (product) {
+        console.log(product);
+        return product;  // Devolvemos el objeto del producto encontrado
+      } else {
+        console.log("Producto no encontrado");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al obtener el producto:", error);
+      return null;
     }
   }
 
@@ -61,14 +76,14 @@ class ProductManager {
   }
 
   async saveProductsToFile() {
-    await fs.writeFile('./productos.txt', JSON.stringify(this.products));
+    await fs.writeFile(this.path, JSON.stringify(this.products));
   }
 }
 
 // Cargar productos desde el archivo tx al crear una instancia de ProductManager
 const loadProductsFromFile = async () => {
   try {
-    const productsData = await fs.readFile('./productos.txt', 'utf-8');
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
     const products = JSON.parse(productsData);
     return new ProductManager(products);
   } catch (error) {
@@ -78,41 +93,34 @@ const loadProductsFromFile = async () => {
 
 // Crear una instancia de ProductManager y cargar los productos desde el txt
 loadProductsFromFile().then(async (manager) => {
-
+  // Agregar, obtener, actualizar y eliminar productos aquí
 
   // agregando productos
-  await manager.addProduct({
-    title: 'Producto 3',
-    description: 'Descripción del Producto 3',
+ /* await manager.addProduct({
+    title: 'Producto 1',
+    description: 'Descripción del Producto 1',
     price: 25.99,
-    thumbnail: 'ruta/imagen3.jpg',
-    code: 'P3',
+    thumbnail: 'ruta/imagen1.jpg',
+    code: 'P1',
     stock: 30
   });
 
   await manager.addProduct({
     title: 'Producto 2',
-    description: 'Descripción del Producto 6',
+    description: 'Descripción del Producto 2',
     price: 256.99,
     thumbnail: 'ruta/imagen3.jpg',
-    code: 'P5',
+    code: 'P2',
     stock: 30
   });
+*/
+  
 
-  await manager.addProduct({   // Prueba de campos obligatorios.
-    title: 'Producto 1',
-    description: '',
-    price: 25.99,
-    thumbnail: 'ruta/imagen3.jpg',
-    code: 'P3',
-    stock: 30
-  });
+  //await manager.getProductById(1); // Busca producto con ID 1
 
-  await manager.getProductById(1); // Busca producto con ID 1
+  //await manager.updateProduct(1, { title: 'Producto 1', price:'20000' }); // Actualiza producto con ID 1
 
-  await manager.updateProduct(1, { title: 'Producto 1', price:'20000' }); // Actualiza producto con ID 1
-
-  //await manager.deleteProduct(1); // Eliminar producto con ID 1
+  //await manager.deleteProduct(2); // Eliminar producto con ID 1
 
   const updatedProducts = manager.getProducts(); // Obtener todos los productos actualizados
 
