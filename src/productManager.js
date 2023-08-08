@@ -8,6 +8,9 @@ export class ProductManager {
   }
 
   async addProduct(product) {
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
+		this.products = JSON.parse(productsData);
+    
     if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
       console.error('Todos los campos del producto son obligatorios.');
       return;
@@ -24,10 +27,27 @@ export class ProductManager {
     await this.saveProductsToFile();
   }
 
-  getProducts() {
-    return this.products;
+  async getProducts() {
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
+		this.products = JSON.parse(productsData);
+  try {
+    const productsData = await fs.readFile(this.path, 'utf-8');
+
+    if (productsData.trim() === "") {
+      console.log("El archivo de productos está vacío.");
+      return [];
+    }
+
+    const products = JSON.parse(productsData);
+    return products;
+  } catch (error) {
+    console.error("Error al obtener los productos:", error);
+    return [];
   }
+}
   async getProductById(id) {
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
+		this.products = JSON.parse(productsData);
     try {
       const productsData = await fs.readFile(this.path, 'utf-8');
 
@@ -52,7 +72,9 @@ export class ProductManager {
     }
   }
 
-  async updateProduct(id, updatedProduct) {
+  async updateProduct(id, updatedProduct){
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
+		this.products = JSON.parse(productsData);
     const productIndex = this.products.findIndex(p => p.id === id);
     if (productIndex !== -1) {
       this.products[productIndex] = { ...this.products[productIndex], ...updatedProduct };
@@ -64,6 +86,8 @@ export class ProductManager {
   }
 
   async deleteProduct(id) {
+    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
+		this.products = JSON.parse(productsData);
     const initialProductCount = this.products.length;
     this.products = this.products.filter(p => p.id !== id);
 
@@ -76,6 +100,7 @@ export class ProductManager {
   }
 
   async saveProductsToFile() {
+   
     await fs.writeFile(this.path, JSON.stringify(this.products));
   }
 }
@@ -83,8 +108,7 @@ export class ProductManager {
 // Cargar productos desde el archivo tx al crear una instancia de ProductManager
 const loadProductsFromFile = async () => {
   try {
-    const productsData = await fs.readFile('./src/productos.txt', 'utf-8');
-    const products = JSON.parse(productsData);
+   
     return new ProductManager(products);
   } catch (error) {
     return new ProductManager();
@@ -93,32 +117,34 @@ const loadProductsFromFile = async () => {
 
 // Crear una instancia de ProductManager y cargar los productos desde el txt
 loadProductsFromFile().then(async (manager) => {
+  
+  
   // Agregar, obtener, actualizar y eliminar productos aquí
 
   // agregando productos
- /* await manager.addProduct({
-    title: 'Producto 1',
+  await manager.addProduct({
+    title: 'Producto 6',
     description: 'Descripción del Producto 1',
     price: 25.99,
     thumbnail: 'ruta/imagen1.jpg',
-    code: 'P1',
+    code: 'P6',
     stock: 30
   });
 
   await manager.addProduct({
-    title: 'Producto 2',
+    title: 'Producto 6',
     description: 'Descripción del Producto 2',
     price: 256.99,
     thumbnail: 'ruta/imagen3.jpg',
-    code: 'P2',
+    code: 'P5',
     stock: 30
   });
-*/
+
   
 
   //await manager.getProductById(1); // Busca producto con ID 1
 
-  //await manager.updateProduct(1, { title: 'Producto 1', price:'20000' }); // Actualiza producto con ID 1
+  await manager.updateProduct(1, { title: 'Producto 1', price:'20000' }); // Actualiza producto con ID 1
 
   //await manager.deleteProduct(2); // Eliminar producto con ID 1
 
