@@ -1,0 +1,20 @@
+[
+  {
+    "title": "producto 1",
+    "description": " descripción 1",
+    "price": 29.99,
+    "thumbnail": "nuevo1/ruta/imagen.jpg",
+    "code": "NP123",
+    "stock": 20,
+    "id": "76c52317-459c-4c34-b3ad-b8288769dc24"
+  },
+  {
+    "title": "producto 2",
+    "description": " descripción 2",
+    "price": 39.99,
+    "thumbnail": "nuevo2/ruta/imagen.jpg",
+    "code": "JH123",
+    "stock": 20,
+    "id": "7147fe40-5067-4f86-8dd4-191b60fbb101"
+  }
+]
